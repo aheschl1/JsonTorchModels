@@ -24,6 +24,7 @@ You have some options:
 2. Add an if statement to utils.py.
 3. Pass a list of packages (all the way to the file) to ModelFactory with the argument lookup_packages.
 4. Modify _~/.jsontorchmodules.lookup_ and add a package on each line where this package should search for modules.
+5. Instead of only giving the class name, you can give full.path.name.Component as Component Class
 
 There are two levels of syntax to keep in mind.
 1. Modules
