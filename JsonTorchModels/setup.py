@@ -11,6 +11,7 @@ setup(
     packages=find_packages(),
     author='Andrew Heschl',
     author_email='ajheschl@gmail.com',
+    url="https://github.com/aheschl1/JsonTorchModels",
     description='Package for defining PyTorch models in JSON, '
                 'intended for quick iteration of experimentation, and config-like model defining.'
 )

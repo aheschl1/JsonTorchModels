@@ -1,0 +1,46 @@
+{
+    "Tag": "Tags are just for your readability. Here, we use ComponentClass: efficientnet_b0. Because this exists in torchvision.models, it will be loaded.",
+    "Children": [
+        {
+            "ComponentClass": "Conv2d",
+            "args": {
+                "in_channels": 1,
+                "out_channels": 3,
+                "kernel_size": 3,
+                "padding": 1
+            }
+        },
+        {
+            "ComponentClass": "efficientnet_b0",
+            "args": {
+                "weights": "EfficientNet_B0_Weights.IMAGENET1K_V1"
+            }
+        },
+        {
+            "ComponentClass": "Flatten",
+            "args": {}
+        },
+        {
+            "ComponentClass":"ReLU",
+            "args":{}
+        },
+        {
+            "ComponentClass": "Linear",
+            "args": {
+                "in_features": 1000,
+                "out_features": 256
+            }
+        },
+        {
+            "ComponentClass":"ReLU",
+            "args":{}
+        },
+        {
+            "ComponentClass": "Linear",
+            "args": {
+                "in_features": 256,
+                "out_features": 12
+            }
+        }
+    ]
+}

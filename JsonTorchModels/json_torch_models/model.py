@@ -16,7 +16,7 @@ class JsonPyTorchModel(nn.Module):
         self.tag = tag
         self.child_modules = children
         self.data = {}
-        self.self_modules = nn.ModuleList([])
+        self.network_modules = nn.ModuleList([])
         self.sequences = {}
         self._construct()
 
@@ -27,21 +27,21 @@ class JsonPyTorchModel(nn.Module):
         """
         for child in self.child_modules:
             if 'Tag' in child.keys():
-                self.self_modules.append(JsonPyTorchModel(
+                self.network_modules.append(JsonPyTorchModel(
                     child['Tag'],
                     child['Children']
                 ))
 
             elif 'store_out' not in child.keys() and 'forward_in' not in child.keys():
                 module = my_import(child['ComponentClass'])
-                self.self_modules.append(
+                self.network_modules.append(
                     module=module(**(child['args']))
                 )
             else:
                 # New operation
                 this_operation = {}
                 # Store module
-                self.self_modules.append(
+                self.network_modules.append(
                     module=my_import(child['ComponentClass'])(**(child['args']))
                 )
                 if 'store_out' in child.keys():
@@ -53,7 +53,7 @@ class JsonPyTorchModel(nn.Module):
                         }
                     this_operation['forward_in'] = child['forward_in']
 
-                self.sequences[len(self.self_modules) - 1] = this_operation
+                self.sequences[len(self.network_modules) - 1] = this_operation
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """
@@ -61,7 +61,7 @@ class JsonPyTorchModel(nn.Module):
         :param x: The data to compute.
         :return: The output data.
         """
-        for i, module in enumerate(self.self_modules):
+        for i, module in enumerate(self.network_modules):
 
             if i not in self.sequences.keys():
                 x = module(x)

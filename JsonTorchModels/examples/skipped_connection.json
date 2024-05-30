@@ -1,0 +1,47 @@
+{
+    "Tag": "Tags indicate that you wrap children. Here, we use ComponentClass: efficientnet_b0. Because this exists in torchvision.models, it will be loaded.",
+    "Children": [
+        {
+            "ComponentClass": "Conv2d",
+            "args": {
+                "in_channels": 1,
+                "out_channels": 3,
+                "kernel_size": 3,
+                "padding": 1
+            },
+            "skipped_out": "first_skipped_connection"
+        },
+        {
+          "ComponentClass": "SkippedLinker",
+          "args": {
+            "mode": "add",
+            "module": {
+              "Tag": "Linker is used, because with skipped connections, two arguments are passed to forward. A nn.Conv2d can't handle this. You can clone the repo and define different ways of handling this, or, implement your own Residual block.",
+              "Children": [
+                {
+                  "Comment": "The linker class with build the internal network recursively.",
+                  "ComponentClass": "Conv2d",
+                  "args": {
+                    "in_channels": 3,
+                    "out_channels": 3,
+                    "kernel_size": 3,
+                    "padding": 1
+                  }
+                }
+              ]
+            }
+          },
+          "skipped_in": "first_skipped_connection"
+        },
+        {
+          "ComponentClass": "Conv2d",
+          "args": {
+            "in_channels": 3,
+            "out_channels": 3,
+            "kernel_size": 3,
+            "padding": 1
+          },
+          "skipped_in": "first_skipped_connection"
+        }
+    ]
+}

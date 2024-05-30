@@ -13,9 +13,9 @@ class ModelFactory:
         :param json_path: The path to the json file to parse.
         """
         self.json_path = json_path
-        self._build_architecture()
         self.model = None
         self.log_kwargs = None
+        self._build_architecture()
 
     def _build_architecture(self) -> None:
         """
