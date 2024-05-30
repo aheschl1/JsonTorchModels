@@ -2,7 +2,7 @@ import json
 from typing import Union, List
 
 from json_torch_models.model import JsonPyTorchModel
-from json_torch_models.utils import my_import
+from json_torch_models.utils import my_import, PackageLookupBin
 from torch import nn
 
 
@@ -13,6 +13,7 @@ class ModelFactory:
         :param json_path: The path to the json file to parse.
         :param lookup_packages: extra packages in which to look for modules.
         """
+        PackageLookupBin.lookup_paths.extend(lookup_packages)
         self.json_path = json_path
         self.model = None
         self.log_kwargs = None
