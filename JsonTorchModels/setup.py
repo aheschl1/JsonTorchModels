@@ -9,8 +9,8 @@ setup(
         'torch'
     ],
     packages=find_packages(),
-    url='https://github.com/aheschl1/ClassificationPipeline',
     author='Andrew Heschl',
     author_email='ajheschl@gmail.com',
-    description='Classification Pipeline'
+    description='Package for defining PyTorch models in JSON, '
+                'intended for quick iteration of experimentation, and config-like model defining.'
 )

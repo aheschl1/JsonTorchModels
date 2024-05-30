@@ -1,12 +1,12 @@
 import json
 from typing import Union
 
-from json_torch_models.model_builder import ModelBuilder
+from json_torch_models.model import JsonPyTorchModel
 from json_torch_models.utils import my_import
 from torch import nn
 
 
-class ModelGenerator:
+class ModelFactory:
     def __init__(self, json_path: str) -> None:
         """
         Given a path to a json model skeleton, helps builds a model, and verifies that the json is correct.
@@ -14,6 +14,8 @@ class ModelGenerator:
         """
         self.json_path = json_path
         self._build_architecture()
+        self.model = None
+        self.log_kwargs = None
 
     def _build_architecture(self) -> None:
         """
@@ -28,22 +30,16 @@ class ModelGenerator:
         else:
             self.log_kwargs = None
         if 'Only' in model_definition.keys():
-            import torchvision.models as models
             # This is to be used if you just want to point to a pre-writen network
             model = my_import(model_definition['Only']['ComponentClass'])
-            print("==================This code sucks=================")
-            self.model = nn.Sequential(
-                models.efficientnet_b0(),
-                nn.ReLU(),
-                nn.Linear(1000, 102)
-            )
+            self.model = model
             return
         if "Encoder" in model_definition.keys():
-            ModelGenerator.verify_unet_structure(model_definition)
-            model_definition = ModelGenerator._convert_unetlike_to_normal(model_definition)
+            ModelFactory._verify_unet_structure(model_definition)
+            model_definition = ModelFactory._convert_unet_like_to_normal(model_definition)
         else:
-            ModelGenerator.verify_structure(model_definition)
-        model = ModelBuilder(model_definition['Tag'], model_definition['Children'])
+            ModelFactory._verify_structure(model_definition)
+        model = JsonPyTorchModel(model_definition['Tag'], model_definition['Children'])
 
         self.model = model
 
@@ -61,7 +57,7 @@ class ModelGenerator:
         return self.log_kwargs
 
     @staticmethod
-    def _convert_unetlike_to_normal(model_definition: dict) -> dict:
+    def _convert_unet_like_to_normal(model_definition: dict) -> dict:
         """
         Convert a json that was defined with unet syntax into the normal fully sequential representation.
         :param model_definition: The model dictionary.
@@ -84,7 +80,7 @@ class ModelGenerator:
         return new_root
 
     @staticmethod
-    def verify_structure(model_definition: dict) -> bool:
+    def _verify_structure(model_definition: dict) -> bool:
         """
         Verifies that the structure of a json model is valid.
         :param model_definition: The model dictionary to verify.
@@ -92,7 +88,7 @@ class ModelGenerator:
         """
         keys = model_definition.keys()
 
-        ModelGenerator._validate_node(keys)
+        ModelFactory._validate_node(keys)
 
         if 'Tag' in keys:
             if not isinstance(model_definition['Tag'], str):
@@ -119,12 +115,12 @@ class ModelGenerator:
 
         if 'Children' in keys:
             for child in list(model_definition['Children']):
-                ModelGenerator.verify_structure(child)
+                ModelFactory._verify_structure(child)
 
         return True
 
     @staticmethod
-    def verify_unet_structure(model_definition: dict) -> bool:
+    def _verify_unet_structure(model_definition: dict) -> bool:
         """
         Verifies that the structure of a json model is valid.
         :param model_definition: The model dictionary to verify.
@@ -142,11 +138,11 @@ class ModelGenerator:
                                                    " the portions should be defined as lists!")
 
         for element in model_definition['Encoder']:
-            ModelGenerator.verify_structure(element)
+            ModelFactory._verify_structure(element)
         for element in model_definition['Decoder']:
-            ModelGenerator.verify_structure(element)
+            ModelFactory._verify_structure(element)
         for element in model_definition['Middle']:
-            ModelGenerator.verify_structure(element)
+            ModelFactory._verify_structure(element)
 
         return True
 

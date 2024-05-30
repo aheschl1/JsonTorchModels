@@ -4,7 +4,7 @@ import torch.nn as nn
 from json_torch_models.utils import my_import
 
 
-class ModelBuilder(nn.Module):
+class JsonPyTorchModel(nn.Module):
 
     def __init__(self, tag: str, children: list) -> None:
         """
@@ -12,7 +12,7 @@ class ModelBuilder(nn.Module):
         :param tag: Name for the current module. Does nothing.
         :param children: List of children in dictionary form.
         """
-        super(ModelBuilder, self).__init__()
+        super(JsonPyTorchModel, self).__init__()
         self.tag = tag
         self.child_modules = children
         self.data = {}
@@ -27,7 +27,7 @@ class ModelBuilder(nn.Module):
         """
         for child in self.child_modules:
             if 'Tag' in child.keys():
-                self.self_modules.append(ModelBuilder(
+                self.self_modules.append(JsonPyTorchModel(
                     child['Tag'],
                     child['Children']
                 ))
