@@ -1,5 +1,5 @@
 import json
-from typing import Union
+from typing import Union, List
 
 from json_torch_models.model import JsonPyTorchModel
 from json_torch_models.utils import my_import
@@ -7,10 +7,11 @@ from torch import nn
 
 
 class ModelFactory:
-    def __init__(self, json_path: str) -> None:
+    def __init__(self, json_path: str, lookup_packages: List[str]) -> None:
         """
         Given a path to a json model skeleton, helps builds a model, and verifies that the json is correct.
         :param json_path: The path to the json file to parse.
+        :param lookup_packages: extra packages in which to look for modules.
         """
         self.json_path = json_path
         self.model = None
