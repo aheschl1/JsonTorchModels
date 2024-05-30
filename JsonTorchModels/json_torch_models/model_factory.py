@@ -7,13 +7,14 @@ from torch import nn
 
 
 class ModelFactory:
-    def __init__(self, json_path: str, lookup_packages: List[str]) -> None:
+    def __init__(self, json_path: str, lookup_packages: List[str] = None) -> None:
         """
         Given a path to a json model skeleton, helps builds a model, and verifies that the json is correct.
         :param json_path: The path to the json file to parse.
         :param lookup_packages: extra packages in which to look for modules.
         """
-        PackageLookupBin.lookup_paths.extend(lookup_packages)
+        if lookup_packages is not None:
+            PackageLookupBin.lookup_paths.extend(lookup_packages)
         self.json_path = json_path
         self.model = None
         self.log_kwargs = None
