@@ -1,0 +1,19 @@
+{
+    "Tag": "You can always define your own classes! For example, ~/.jsontorchmodels.lookup may contain pipe.models.src.diffusion_models.extra_unstable_diffusion",
+    "Children": [
+      {
+        "ComponentClass": "ExtraUnstableDiffusion",
+        "args": {
+          "im_channels":3,
+          "seg_channels":1,
+          "layer_depth":2,
+          "channels":[32, 64, 128, 256],
+          "middle_layers_count":1,
+          "conv_op": "Conv2d",
+          "norm_op": "BatchNorm2d",
+          "time_emb_dim":100,
+          "attention":"norm"
+        }
+      }
+    ]
+}
