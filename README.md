@@ -1,5 +1,4 @@
-**https://github.com/aheschl1/JsonTorchModels/blob/11fc9148c1b21c2e4d0c05af7723c232f2ab93ad/JsonTorchModels/README.md
-****Json Pytorch Models**
+**Json Pytorch Models**
 This is an experimentation software built with quick arhitecture iteration in mind.
 By outlining your model in json, you can create many configurations and structures quickly, without needing to have many python classes.
 
