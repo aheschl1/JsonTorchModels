@@ -18,8 +18,12 @@ kwargs = factory.get_log_kwargs() # or factory.log_kwargs
 out = model(in)
 ```
 **Linking with Custom Modules**
-Clone this repository, and add your class to json_torch_models.modules.default_modules where it will be found by class name.
-You can also add an if statement to utils.py.
+
+You have some options:
+1. Clone this repository, and add your class to json_torch_models.modules.default_modules where it will be found by class name.
+2. Add an if statement to utils.py.
+3. Pass a list of packages (all the way to the file) to ModelFactory with the argument lookup_packages.
+4. Modify _~/.jsontorchmodules.lookup_ and add a package on each line where this package should search for modules.
 
 There are two levels of syntax to keep in mind.
 1. Modules
