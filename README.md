@@ -3,6 +3,15 @@ This is an experimentation software built with quick arhitecture iteration in mi
 By outlining your model in json, you can create many configurations and structures quickly, without needing to have many python classes.
 
 **How to use**
+
+*Option 1*
+
+1. pip install pip install json-torch-models
+2. Define your models in json (as described below)
+3. From any project:
+
+*Option 2*
+
 1. Navigate to the root directory after cloning.
 3. pip install -e .
 4. Define your models in json (as described below)
@@ -24,6 +33,7 @@ You have some options:
 2. Add an if statement to utils.py.
 3. Pass a list of packages (all the way to the file) to ModelFactory with the argument lookup_packages.
 4. Modify _~/.jsontorchmodules.lookup_ and add a package on each line where this package should search for modules.
+5. Instead of only giving the class name, you can give full.path.name.Component as Component Class
 
 There are two levels of syntax to keep in mind.
 1. Modules
