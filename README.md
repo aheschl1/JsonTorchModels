@@ -7,15 +7,15 @@ By outlining your model in json, you can create many configurations and structur
 *Option 1*
 
 1. pip install json-torch-models
-2. Define your models in json (as described below)
-3. From any project:
 
 *Option 2*
 
 1. Navigate to the root directory after cloning.
-3. pip install -e .
-4. Define your models in json (as described below)
-5. From any project:
+2. pip install -e .
+   
+Define your models in json (as described below)
+
+From any project, build the model with:
 
 ```py
 from json_torch_models.model_factory import ModelFactory
@@ -57,10 +57,12 @@ There are two levels of syntax to keep in mind.
 *Components*
 
 Component classes are looked up in this order:
-1. torchvision.models
-2. torch.nn
-3. json_torch_models.modules.default_modules
-To add new components, add them to json_torch_models.modules.default_modules or modify json_torch_models.utils to index where you need.
+1. Fully qualified name (crashes if it doesn't exist)
+2. torchvision.models
+3. torch.nn
+4. json_torch_models.modules.default_modules
+
+To add new components, add them to json_torch_models.modules.default_modules or modify json_torch_models.utils to map where you need.
 ```
 {
   "ComponentClass": "SkippedLinker",
