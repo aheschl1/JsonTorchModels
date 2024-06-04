@@ -55,7 +55,7 @@ class JsonPyTorchModel(nn.Module):
 
                 self.sequences[len(self.network_modules) - 1] = this_operation
 
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
+    def forward(self, *x: torch.Tensor) -> torch.Tensor:
         """
         Performs the forward pass and manages skipped connections.
         :param x: The data to compute.
@@ -64,7 +64,7 @@ class JsonPyTorchModel(nn.Module):
         for i, module in enumerate(self.network_modules):
 
             if i not in self.sequences.keys():
-                x = module(x)
+                x = module(*x)
             else:
                 operation = self.sequences[i]
                 if 'forward_in' in operation.keys():
@@ -72,10 +72,10 @@ class JsonPyTorchModel(nn.Module):
                     forward_in = {}
                     for key, value in operation['forward_in'].items():
                         forward_in[key] = self.data[value]
-                    x = module(x, forward_in)
+                    x = module(*x, forward_in)
 
                 else:
-                    x = module(x)
+                    x = module(*x)
 
                 if 'store_out' in operation.keys():
                     self.data[operation['store_out']] = x
