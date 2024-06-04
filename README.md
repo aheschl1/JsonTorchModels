@@ -6,7 +6,7 @@ By outlining your model in json, you can create many configurations and structur
 
 *Option 1*
 
-1. pip install pip install json-torch-models
+1. pip install json-torch-models
 2. Define your models in json (as described below)
 3. From any project:
 
