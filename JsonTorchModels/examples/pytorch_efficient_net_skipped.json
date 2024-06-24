@@ -29,18 +29,31 @@
             "args": {
                 "in_features": 1000,
                 "out_features": 256
-            }
+            },
+            "store_out": "features"
         },
         {
             "component_class":"ReLU",
             "args":{}
         },
         {
-            "component_class": "Linear",
+            "component_class": "SkippedLinker",
             "args": {
-                "in_features": 256,
-                "out_features": 12
-            }
+                "module": {
+                    "comment": "linker module calls this library to recursively build the model.",
+                    "children": [
+                        {
+                            "component_class": "Linear",
+                            "args": {
+                                "in_features": 256,
+                                "out_features": 12
+                            }
+                        }
+                    ]
+                },
+                "mode": "concat"
+            },
+            "forward_in": "features"
         }
     ]
 }

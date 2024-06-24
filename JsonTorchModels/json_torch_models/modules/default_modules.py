@@ -1,3 +1,5 @@
+from typing import Dict, Any
+
 import torch.nn as nn
 import torch
 from json_torch_models.model import JsonPyTorchModel
@@ -16,10 +18,10 @@ class SkippedLinker(nn.Module):
         super().__init__()
         assert mode in [ADD, CONCAT]
         self.mode = mode
-        self.module = JsonPyTorchModel(module['Tag'], module['Children'])
+        self.module = JsonPyTorchModel(module['children'], tag=module.get('tag', None))
 
-    def forward(self, x: torch.Tensor, extra: torch.Tensor):
-        extra = list(extra.values())
+    def forward(self, x: torch.Tensor, extras: Dict[Any, torch.Tensor]):
+        extra = list(extras.values())
         assert len(extra) == 1, "Can only use Linker with a single extra input value."
         extra = extra[0]
 
