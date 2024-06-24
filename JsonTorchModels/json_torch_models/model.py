@@ -16,8 +16,8 @@ class JsonPyTorchModel(nn.Module):
         self.tag = tag
         self.child_modules = children
         self.data = {}
+        self.skipped_connections = {}
         self.network_modules = nn.ModuleList([])
-        self.sequences = {}
         self._construct()
 
     def _construct(self) -> None:
@@ -31,19 +31,15 @@ class JsonPyTorchModel(nn.Module):
                     child['Tag'],
                     child['Children']
                 ))
+                return
 
-            elif 'store_out' not in child.keys() and 'forward_in' not in child.keys():
-                module = my_import(child['ComponentClass'])
-                self.network_modules.append(
-                    module=module(**(child['args']))
-                )
-            else:
+            self.network_modules.append(
+                my_import(child['ComponentClass'])(**(child['args']))
+            )
+
+            if 'store_out' in child.keys() or 'forward_in' in child.keys():
                 # New operation
                 this_operation = {}
-                # Store module
-                self.network_modules.append(
-                    module=my_import(child['ComponentClass'])(**(child['args']))
-                )
                 if 'store_out' in child.keys():
                     this_operation['store_out'] = child['store_out']
                 if 'forward_in' in child.keys():
@@ -53,7 +49,7 @@ class JsonPyTorchModel(nn.Module):
                         }
                     this_operation['forward_in'] = child['forward_in']
 
-                self.sequences[len(self.network_modules) - 1] = this_operation
+                self.skipped_connections[len(self.skipped_connections)] = this_operation
 
     def forward(self, *x: torch.Tensor) -> torch.Tensor:
         """
@@ -62,22 +58,16 @@ class JsonPyTorchModel(nn.Module):
         :return: The output data.
         """
         for i, module in enumerate(self.network_modules):
+            skipped_operation = self.skipped_connections.get(i, {})
 
-            if i not in self.sequences.keys():
+            if "forward_in" not in skipped_operation:
                 x = module(*x)
             else:
-                operation = self.sequences[i]
-                if 'forward_in' in operation.keys():
-                    # Replace the map of "key" : "variable" with "key" : value
-                    forward_in = {}
-                    for key, value in operation['forward_in'].items():
-                        forward_in[key] = self.data[value]
-                    x = module(*x, forward_in)
+                # Replace the map of "key" : "variable" with "key" : value
+                forward_in = {key: self.data[value] for key, value in skipped_operation['forward_in'].items()}
+                x = module(*x, forward_in)
 
-                else:
-                    x = module(*x)
-
-                if 'store_out' in operation.keys():
-                    self.data[operation['store_out']] = x
+            if 'store_out' in skipped_operation:
+                self.data[skipped_operation['store_out']] = x
 
         return x
