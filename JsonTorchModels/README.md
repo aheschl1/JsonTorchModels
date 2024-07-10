@@ -36,8 +36,8 @@ There are two levels of syntax to keep in mind.
 ```
 {
   "LogKwargs": {"log": "stuff", "not": "required"},
-  "Tag": "Required, but can be anything",
-  "Children": [
+  "tag": "Not required tag",
+  "children": [
     // a module,
    // a component,
    ....
@@ -54,7 +54,7 @@ Component classes are looked up in this order:
 To add new components, add them to json_torch_models.modules.default_modules or modify json_torch_models.utils to index where you need.
 ```
 {
-  "ComponentClass": "SkippedLinker",
+  "component_class": "SkippedLinker",
   "args": {
     "argument_a": "value_1"
     ....
@@ -69,7 +69,7 @@ To add new components, add them to json_torch_models.modules.default_modules or 
 ```
 {
   "LogKwargs": {"log": "stuff", "not": "required"},
-  "Tag": "Required, but can be anything",
+  "tag": "Required, but can be anything",
   "Encoder": [List of modules and components],
   "Middle": [List of modules and components],
   "Decoder": [List of modules and components]
